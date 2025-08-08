@@ -6,6 +6,7 @@
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
+from utils import access_nested_map
 
 
 class TestGithubOrgClient(unittest.TestCase):
