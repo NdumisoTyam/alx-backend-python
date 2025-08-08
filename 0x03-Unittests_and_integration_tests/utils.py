@@ -1,3 +1,22 @@
+import requests
+
+def get_json(url):
+    """
+    Fetch JSON content from a given URL.
+
+    Args:
+        url (str): The URL to send the GET request to.
+
+    Returns:
+        dict: The parsed JSON response.
+
+    Raises:
+        requests.RequestException: If the HTTP request fails.
+    """
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()
+
 def access_nested_map(nested_map, path):
     """
     Retrieve a value from a nested dictionary using a sequence of keys.
