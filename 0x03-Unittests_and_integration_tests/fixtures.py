@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fixtures for integration tests."""
+"""Fixtures for GithubOrgClient integration tests."""
 
 org_payload = {
     "repos_url": "https://api.github.com/orgs/testorg/repos"
