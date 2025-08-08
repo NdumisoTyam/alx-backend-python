@@ -1,6 +1,7 @@
 # client.py
 
 from .utils import get_json
+from utils import access_nested_map
 
 def get_json(url):
     """Stub function to be mocked in tests."""
