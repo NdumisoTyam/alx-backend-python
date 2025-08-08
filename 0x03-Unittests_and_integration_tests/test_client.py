@@ -19,6 +19,13 @@ class TestGithubOrgClient(unittest.TestCase):
     - Ensuring proper use of memoization and mocking
     """
     def test_public_repos_url(self):
+    """
+    Test that _public_repos_url returns the correct URL.
+
+    This method mocks the GithubOrgClient.org property to ensure
+    that the _public_repos_url method extracts the 'repos_url'
+    field correctly from the organization payload.
+    """
         expected_url = "https://api.github.com/orgs/testorg/repos"
         payload = {"repos_url": expected_url}
 
