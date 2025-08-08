@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""Unit test for GithubOrgClient.org"""
-
-# test_client.py
+"""Unit tests for GithubOrgClient."""
 
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
-from utils import access_nested_map
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -18,14 +15,15 @@ class TestGithubOrgClient(unittest.TestCase):
     - Retrieving public repositories via public_repos()
     - Ensuring proper use of memoization and mocking
     """
-    def test_public_repos_url(self):
-    """
-    Test that _public_repos_url returns the correct URL.
 
-    This method mocks the GithubOrgClient.org property to ensure
-    that the _public_repos_url method extracts the 'repos_url'
-    field correctly from the organization payload.
-    """
+    def test_public_repos_url(self):
+        """
+        Test that _public_repos_url returns the correct URL.
+
+        This method mocks the GithubOrgClient.org property to ensure
+        that the _public_repos_url method extracts the 'repos_url'
+        field correctly from the organization payload.
+        """
         expected_url = "https://api.github.com/orgs/testorg/repos"
         payload = {"repos_url": expected_url}
 
@@ -42,6 +40,12 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
+        """
+        Test that public_repos returns the list of repository names.
+
+        This method mocks both the _public_repos_url and get_json
+        to simulate retrieving a list of repositories from the API.
+        """
         mock_payload = [
             {"name": "repo1"},
             {"name": "repo2"},
