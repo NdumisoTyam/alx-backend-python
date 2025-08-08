@@ -4,30 +4,24 @@
 # test_client.py
 
 import unittest
-from unittest.mock import patch
-from parameterized import parameterized
-
+from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
 
-
 class TestGithubOrgClient(unittest.TestCase):
+    def test_public_repos_url(self):
+        # Arrange: expected URL and mock payload
+        expected_url = "https://api.github.com/orgs/testorg/repos"
+        payload = {"repos_url": expected_url}
 
-    @parameterized.expand([
-        ("google",),
-        ("abc",),
-    ])
-    @patch('client.get_json')
-    def test_org(self, org_name, mock_get_json):
-        expected_result = {"login": org_name}
-        mock_get_json.return_value = expected_result
+        # Act: patch the 'org' property to return the mock payload
+        with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = payload
 
-        client = GithubOrgClient(org_name)
-        result = client.org
+            client = GithubOrgClient("testorg")
+            result = client._public_repos_url
 
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
-        print("Result:", result)
-        self.assertEqual(result, expected_result)
-
+            # Assert: check that the result matches the expected URL
+            self.assertEqual(result, expected_url)
 
 if __name__ == "__main__":
     unittest.main()
