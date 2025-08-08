@@ -1,4 +1,5 @@
 import requests
+from functools import wraps
 
 def get_json(url):
     """
@@ -34,3 +35,26 @@ def access_nested_map(nested_map, path):
     for key in path:
         nested_map = nested_map[key]
     return nested_map
+
+def memoize(fn):
+    """
+    Decorator that caches the result of a method call.
+
+    The result is stored as a private attribute on the instance,
+    so subsequent calls return the cached value.
+
+    Args:
+        fn (Callable): The method to memoize.
+
+    Returns:
+        Callable: The wrapped method with caching.
+    """
+    attr_name = "_{}".format(fn.__name__)
+
+    @wraps(fn)
+    def memoized(self):
+        if not hasattr(self, attr_name):
+            setattr(self, attr_name, fn(self))
+        return getattr(self, attr_name)
+
+    return memoized
