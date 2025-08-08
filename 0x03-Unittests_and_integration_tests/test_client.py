@@ -10,6 +10,14 @@ from utils import access_nested_map
 
 
 class TestGithubOrgClient(unittest.TestCase):
+    """
+    Unit tests for the GithubOrgClient class.
+
+    This test suite covers:
+    - Accessing the public repositories URL via _public_repos_url
+    - Retrieving public repositories via public_repos()
+    - Ensuring proper use of memoization and mocking
+    """
     def test_public_repos_url(self):
         expected_url = "https://api.github.com/orgs/testorg/repos"
         payload = {"repos_url": expected_url}
