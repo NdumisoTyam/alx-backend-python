@@ -5,7 +5,7 @@ from django.db.models import Prefetch
 
 @login_required
 def inbox_view(request):
-    unread_messages = Message.unread.unread_for_user(request.user)
+    unread_messages = Message.unread.unread_for_user(request.user).only('id', 'sender', 'content', 'timestamp')
     return render(request, 'chat/inbox.html', {'unread_messages': unread_messages})
 
 def send_message(request):
