@@ -2,8 +2,18 @@ from django.shortcuts import render
 from messaging.models import Message
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
+from django.views.decorators.cache import cache_page
+
+@cache_page(60)
 
 @login_required
+def conversation_view(request):
+    messages = Message.objects.filter(parent_message__isnull=True).select_related(
+        'sender', 'receiver'
+    ).prefetch_related('replies').only('id', 'sender', 'receiver', 'content', 'timestamp')
+    
+    return render(request, 'chat/conversation.html', {'messages': messages})
+
 def inbox_view(request):
     unread_messages = Message.unread.unread_for_user(request.user).only('id', 'sender', 'content', 'timestamp')
     return render(request, 'chat/inbox.html', {'unread_messages': unread_messages})
