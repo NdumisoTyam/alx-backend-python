@@ -1,13 +1,29 @@
+from django.shortcuts import render
+from messaging.models import Message
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
-from django.views.decorators.http import require_POST
-
-User = get_user_model()
+from django.db.models import Prefetch
 
 @login_required
-@require_POST
-def delete_user(request):
-    user = request.user
-    user.delete()
-    return redirect('account_deleted')  # Replace with your actual redirect target
+def send_message(request):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        receiver_id = request.POST.get('receiver')
+        parent_id = request.POST.get('parent_message')
+
+        receiver = User.objects.get(id=receiver_id)
+        parent_message = Message.objects.get(id=parent_id) if parent_id else None
+
+        Message.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            content=content,
+            parent_message=parent_message
+        )
+
+    messages = Message.objects.filter(parent_message__isnull=True).select_related(
+        'sender', 'receiver'
+    ).prefetch_related(
+        Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
+    )
+
+    return render(request, 'chat/threaded_messages.html', {'messages': messages})
