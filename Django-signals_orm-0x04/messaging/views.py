@@ -4,10 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 
 @login_required
-
-@login_required
 def inbox_view(request):
-    unread_messages = Message.unread.for_user(request.user)
+    unread_messages = Message.unread.unread_for_user(request.user)
     return render(request, 'chat/inbox.html', {'unread_messages': unread_messages})
 
 def send_message(request):
