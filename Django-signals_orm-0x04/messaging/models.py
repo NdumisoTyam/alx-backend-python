@@ -14,6 +14,16 @@ class Message(models.Model):
         related_name='edited_messages',
         on_delete=models.SET_NULL
     )
+    parent_message = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='replies',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f"{self.sender} → {self.receiver} | {self.content[:30]}"
 
     def __str__(self):
         return f"{self.sender} → {self.receiver} | Edited: {self.edited}"
